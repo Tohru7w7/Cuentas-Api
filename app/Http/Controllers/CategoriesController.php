@@ -34,7 +34,17 @@ class CategoriesController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'name'=>'required|string|min:2',
+            'type'=>'required',
+            'user_id'=>'required',
+        ]);
+        $data = categorie::create($validated);
+        return response()->json([
+            "status"=>"ok",
+            "message"=>"Dato insertado correctamente",
+            "data"=>$data
+        ]);
     }
 
     /**
@@ -42,7 +52,18 @@ class CategoriesController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $data = categorie::find($id);
+        if($data){
+            return response()->json([
+            "status"=>"ok",
+            "message"=>"Cuenta encontrada",
+            "data"=>$data
+        ]);
+        }
+        return response()->json([
+            "status"=>"error",
+            "message"=>"Cuenta no encontrada"
+        ],400);
     }
 
     /**
@@ -58,7 +79,19 @@ class CategoriesController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $validated = $request->validate([
+            'name'=>'required|string|min:2',
+            'type'=>'required',
+            'user_id'=>'required',
+        ]);
+        $data = categorie::findOrFail($id);
+        $data->update($validated);
+        //$data = account::create($validated);
+        return response()->json([
+            "status"=>"ok",
+            "message"=>"Dato insertado correctamente",
+            "data"=>$data
+        ]);
     }
 
     /**
@@ -66,6 +99,13 @@ class CategoriesController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $data = categorie::find($id);
+        if($data){
+            $data->delete();
+        }
+        return response()->json([
+            "status"=>"ok",
+            "message"=>"Dato eliminado correctamente"
+        ]);
     }
 }
